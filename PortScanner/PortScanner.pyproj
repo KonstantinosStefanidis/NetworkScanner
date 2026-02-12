@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>3ebf3b8b-fb50-4cf6-ab30-1686ede7492d</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>PortScanner.py</StartupFile>
+    <StartupFile>main.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,7 +21,15 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="PortScanner.py" />
+    <Compile Include="scanner\cli.py" />
+    <Compile Include="scanner\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="scanner\syn_scan.py" />
+    <Compile Include="main.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="scanner\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
