@@ -1,4 +1,5 @@
-from scapy.all import *
+from scapy.layers.inet import IP, TCP, ICMP
+from scapy.sendrecv import sr1
 import random
 
 def syn_scan(target, port, retries=2, timeout=2):
@@ -6,7 +7,7 @@ def syn_scan(target, port, retries=2, timeout=2):
         sport = random.randint(1024, 65535)
         packet = IP(dst=target) / TCP(sport=sport, 
                                       dport=port, 
-                                      flags="S",)
+                                      flags="S")
 
         response = sr1(packet, timeout=timeout, verbose=0)
 

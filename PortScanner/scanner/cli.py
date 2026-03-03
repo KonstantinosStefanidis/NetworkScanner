@@ -1,6 +1,4 @@
 import argparse
-import sys
-import os
 import threading
 from scanner.syn_scan import syn_scan
 from concurrent.futures import ThreadPoolExecutor
@@ -25,13 +23,18 @@ def run():
 
     print(f"Starting scan on {target}...")
 
+    if bool(start_port) != bool(end_port):
+        print("Error: --start and --end must be used together.")
+        return
+
     if targeted_port:
         ports = [int(p.strip(",")) for p in targeted_port]
-        for port in ports:
-            result = syn_scan(target, port)
+        with ThreadPoolExecutor(max_workers=50) as executor:
+            results = executor.map(lambda port: scan_and_store(target, port), ports)
+        for port, result in results:
             if result == "OPEN":
                 open_ports.append(port)
-            if result == "FILTERED":
+            elif result == "FILTERED":
                 filtered_ports.append(port)
 
     if start_port and end_port:
