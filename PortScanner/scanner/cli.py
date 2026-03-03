@@ -60,7 +60,7 @@ def scan_and_store(target, port):
 # Scapy's sr1() spawns internal threads for packet sending/receiving.
 # When running my own scans with ThreadPoolExecutor, these internal threads occasionally fail with OSError errno 9 (Bad file descriptor)
 # and errno 22 (Invalid argument) during cleanup. These are known Scapy pipe errors on Windows and do not affect scan results.
-# threading.excepthook is used to suppress these specific errors only.
+# threading.excepthook is used to suppress these specific errors only. To clarify, the errors do occur on every scan, they are just not visible to the user.
 def scapy_thread_error_filter(args):
     if isinstance(args.exc_value, OSError) and args.exc_value.errno in (9, 22):
         return
