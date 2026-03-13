@@ -8,5 +8,5 @@ def grab_banner(target, port, timeout=2):
         banner = sock.recv(1024).decode().strip()
         sock.close()
         return banner
-    except:
+    except(socket.timeout, socket.error, UnicodeDecodeError):
         return None

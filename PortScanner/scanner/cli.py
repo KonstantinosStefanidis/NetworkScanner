@@ -1,9 +1,11 @@
 import argparse
+from math import e
 import threading
 import time
 from tqdm import tqdm
 from scanner.syn_scan import syn_scan
 from concurrent.futures import ThreadPoolExecutor
+from scanner.banner_grab import grab_banner
 
 
 def run():
@@ -33,8 +35,8 @@ def run():
     if targeted_port:
         ports = [int(p.strip(",")) for p in targeted_port]
         with ThreadPoolExecutor(max_workers=50) as executor:
-            results = list(tqdm(executor.map(lambda port: scan_and_store(target, port), range(start_port, end_port + 1)),
-                               total=len(ports), desc="Scanning"))
+            results = list(tqdm(executor.map(lambda port: scan_and_store(target, port), ports),
+                    total=len(ports), desc="Scanning"))
         for port, result in results:
             if result == "OPEN":
                 open_ports.append(port)
@@ -51,16 +53,20 @@ def run():
             elif "FILTERED" in result:
                 filtered_ports.append(port)
 
-    elapsed = time.time() - start_time
-    print(f"Scan completed in {elapsed:.2f} seconds.")
-
     print(f"Open ports:{len(open_ports)}")
     for port in open_ports:
-        print(f"Port {port} is OPEN")
-
+        banner = grab_banner(target, port)
+        if banner:
+            print(f"Port {port} is OPEN - Banner: {banner}")
+        else:
+            print(f"Port {port} is OPEN")
+        
     print(f"Filtered ports:{len(filtered_ports)}")
     for port in filtered_ports:
         print(f"Port {port} is FILTERED")
+
+    elapsed = time.time() - start_time
+    print(f"Scan completed in {elapsed:.2f} seconds.")
 
 def scan_and_store(target, port):
     result = syn_scan(target, port)
