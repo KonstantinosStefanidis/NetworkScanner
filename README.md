@@ -38,7 +38,7 @@ netscan -t 192.168.1.1 -s 1 -e 1024
 ```
 
 ## How It Works
-NetworkScanner sends TCP SYN packets to each target port and analyzes the response. A SYN-ACK response indicates the port is open, an RST response indicates it is closed, and no response indicates it is filtered. Unlike a full TCP connect scan, the connection is never completed — making it faster and less likely to appear in application logs.
+It sends TCP SYN packets to each target port and analyzes the response. A SYN-ACK response indicates the port is open, an RST response indicates it is closed, and no response indicates it is filtered. Unlike a full TCP connect scan, the connection is never completed, making it faster and less likely to appear in application logs.
 
 
 ## Legal Notice
