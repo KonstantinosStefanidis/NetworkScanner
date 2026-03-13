@@ -22,6 +22,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="scanner\cli.py" />
+    <Compile Include="scanner\banner_grab.py" />
     <Compile Include="scanner\__init__.py">
       <SubType>Code</SubType>
     </Compile>

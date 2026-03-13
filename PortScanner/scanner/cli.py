@@ -1,11 +1,14 @@
 import argparse
 import threading
+import time
+from tqdm import tqdm
 from scanner.syn_scan import syn_scan
 from concurrent.futures import ThreadPoolExecutor
 
 
 def run():
     threading.excepthook = scapy_thread_error_filter
+    start_time = time.time()
 
     parser = argparse.ArgumentParser()
     parser.add_argument("-t", "--target", help="Target IP address to scan", required=True)
@@ -30,23 +33,26 @@ def run():
     if targeted_port:
         ports = [int(p.strip(",")) for p in targeted_port]
         with ThreadPoolExecutor(max_workers=50) as executor:
-            results = executor.map(lambda port: scan_and_store(target, port), ports)
+            results = list(tqdm(executor.map(lambda port: scan_and_store(target, port), range(start_port, end_port + 1)),
+                               total=len(ports), desc="Scanning"))
         for port, result in results:
             if result == "OPEN":
                 open_ports.append(port)
-            elif result == "FILTERED":
+            elif "FILTERED" in result:
                 filtered_ports.append(port)
 
     if start_port and end_port:
         with ThreadPoolExecutor(max_workers=50) as executor:
-            results = executor.map(lambda port: scan_and_store(target, port), range(start_port, end_port + 1))
+            results = list(tqdm(executor.map(lambda port: scan_and_store(target, port), range(start_port, end_port + 1)),
+                               total=end_port - start_port + 1, desc="Scanning"))
         for port, result in results:
             if result == "OPEN":
                 open_ports.append(port)
-            elif result == "FILTERED":
+            elif "FILTERED" in result:
                 filtered_ports.append(port)
 
-    print("Scan completed.")
+    elapsed = time.time() - start_time
+    print(f"Scan completed in {elapsed:.2f} seconds.")
 
     print(f"Open ports:{len(open_ports)}")
     for port in open_ports:
