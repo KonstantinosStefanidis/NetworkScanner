@@ -1,2 +1,0 @@
-[console_scripts]
-netscan = scanner.cli:run
