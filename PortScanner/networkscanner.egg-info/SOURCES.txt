@@ -1,0 +1,11 @@
+pyproject.toml
+networkscanner.egg-info/PKG-INFO
+networkscanner.egg-info/SOURCES.txt
+networkscanner.egg-info/dependency_links.txt
+networkscanner.egg-info/entry_points.txt
+networkscanner.egg-info/requires.txt
+networkscanner.egg-info/top_level.txt
+scanner/__init__.py
+scanner/banner_grab.py
+scanner/cli.py
+scanner/syn_scan.py

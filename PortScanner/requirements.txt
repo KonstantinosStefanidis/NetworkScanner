@@ -1,3 +1,4 @@
 # Windows users must also install Npcap: https://npcap.com
+# Linux users would need libpcap-dev, however, its usually included by default in most distributions.
 scapy
 tqdm
