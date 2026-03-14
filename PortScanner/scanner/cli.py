@@ -2,6 +2,7 @@ import argparse
 from math import e
 import threading
 import time
+import ipaddress
 from tqdm import tqdm
 from scanner.syn_scan import syn_scan
 from concurrent.futures import ThreadPoolExecutor
@@ -28,12 +29,31 @@ def run():
 
     print(f"Starting scan on {target}...")
 
+    #Error checks
     if bool(start_port) != bool(end_port):
         print("Error: --start and --end must be used together.")
         return
+    
+    try:
+        ipaddress.ip_address(target)
+    except ValueError:
+        print(f"Error: '{target}' is not a valid IP address.")
+        return
+    
+    if start_port and end_port:
+        if not (1 <= start_port <= 65535) or not (1 <= end_port <= 65535):
+            print("Error: Ports must be between 1 and 65535.")
+            return
+        if start_port > end_port:
+            print("Error: Start port must be less than or equal to end port.")
+            return
 
+    #Scanning starts here
     if targeted_port:
         ports = [int(p.strip(",")) for p in targeted_port]
+        if any(not (1 <= p <= 65535) for p in ports):
+            print("Error: Ports must be between 1 and 65535.")
+            return
         with ThreadPoolExecutor(max_workers=50) as executor:
             results = list(tqdm(executor.map(lambda port: scan_and_store(target, port), ports),
                     total=len(ports), desc="Scanning"))
@@ -53,6 +73,7 @@ def run():
             elif "FILTERED" in result:
                 filtered_ports.append(port)
 
+    #Outputs
     print(f"Open ports:{len(open_ports)}")
     for port in open_ports:
         banner = grab_banner(target, port)
