@@ -20,14 +20,15 @@ A multithreaded TCP SYN port scanner built in Python using Scapy. Designed to ex
 
 ## Installation
 ```bash
-git clone https://github.com/KonstantinosStefanidis/NetworkScanner
-cd NetworkScanner
-pip install -r requirements.txt
-pip install -e .
+pip install netscan-ks
 ```
 > **Note:** On Linux and macOS, run with `sudo` as raw sockets require root privileges.
 
 ## Usage
+Use -h for help, but here is a short tutorial.
+-t is the target (Needs to be a valid IP address)
+-p is specific ports.
+-s and -e are start and end of a range of ports.
 Scan specific ports:
 ```bash
 netscan -t 192.168.1.1 -p 80 443 22
