@@ -367,3 +367,4 @@ __pycache__/
 *.pyc
 *.pyproj
 *.sln
+dist/
